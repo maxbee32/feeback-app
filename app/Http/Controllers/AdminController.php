@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Complain;
@@ -117,7 +118,7 @@ public function getAllComplains(){
    return DB::table('complains')
        ->join('users', 'complains.user_id', '=' ,'users.id')
        ->get(array(
-             'users.id',
+            'users.id',
             'branch',
             'phone_number',
             'comment'
@@ -129,7 +130,7 @@ public function getComplainToday(){
 
     return  DB::table('complains')
     ->join('users', 'complains.user_id', '=' ,'users.id')
-     -> whereDate('created_at', DB::raw('CURDATE()'))
+     -> whereDate('complains.created_at',  Carbon::today())
     ->get(array(
           'users.id',
          'branch',
