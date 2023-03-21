@@ -26,13 +26,13 @@ class AdminController extends Controller
 
 
      public function __construct(){
-        $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday']]);
+        $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
         $validator = Validator::make($request->all(), [
 
-            'email' => ['required','email'],
+            'email' => ['required','email','unique:admins'],
             'password' => ['required']
 
         ]);
@@ -62,9 +62,9 @@ class AdminController extends Controller
     public function branchSignUp(Request $request){
         $validator = Validator::make($request->all(), [
 
-            'email' => ['required','email'],
+            'email' => ['required','email','unique:users'],
             'password' => ['required'],
-            'branch'=>['required']
+            'branch'=> ['required']
 
         ]);
 
@@ -82,11 +82,33 @@ class AdminController extends Controller
                 ));
 
 
-                return $this->sendResponse([
-                    'success' => true,
+
+                if(!$token = auth()->attempt($validator->validated())){
+                    return $this->sendResponse([
+                        'success' => false,
+                        'data'=> $validator->errors(),
+                        'message' => 'Invalid login credentials'
+                    ], 400);
+
+
+                }
+
+
+                return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'bearer',
+                     'expires_in' => auth()->factory()->getTTL()* 60,
+                     'user'=>auth()->user(),
                     'message' => "branch account created successfully"
                 ],200);
+
+
+
+
 }
+
+
+
 
 public function adminLogin(Request $request){
     $validator = Validator::make($request->all(), [
@@ -115,7 +137,9 @@ public function adminLogin(Request $request){
 
 public function getAllComplains(){
 
-   return DB::table('complains')
+    
+
+   $result = DB::table('complains')
        ->join('users', 'complains.user_id', '=' ,'users.id')
        ->get(array(
             'users.id',
@@ -123,6 +147,13 @@ public function getAllComplains(){
             'phone_number',
             'comment'
        ));
+
+       return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+
 
 }
 
@@ -139,7 +170,15 @@ public function getComplainToday(){
     ));
 
 
-  //  Complain::whereDate('created_at', DB::raw('CURDATE()'))->get();
+
+ }
+
+ public function getAllBranch(){
+    return DB::table('users')
+    ->get(array(
+        'email',
+        'branch'
+    ));
 
  }
 

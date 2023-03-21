@@ -27,6 +27,7 @@ Route:: post("admin-signup","App\Http\Controllers\AdminController@adminSignUp");
 Route:: post("admin-login","App\Http\Controllers\AdminController@adminLogin");
 Route:: post("cust-allfeed","App\Http\Controllers\AdminController@getAllComplains");
 Route:: post("cust-feednow","App\Http\Controllers\AdminController@getComplainToday");
+Route:: post("all-branch","App\Http\Controllers\AdminController@getAllBranch");
 
 });
 
