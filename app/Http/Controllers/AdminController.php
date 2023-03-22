@@ -26,7 +26,8 @@ class AdminController extends Controller
 
 
      public function __construct(){
-        $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart']]);
+        $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart',
+        'feedbackChartPeriod']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
@@ -64,7 +65,7 @@ class AdminController extends Controller
 
             'email' => ['required','email','unique:users'],
             'password' => ['required'],
-            'branch'=> ['required']
+            'branch'=> ['required','unique:users']
 
         ]);
 
@@ -210,7 +211,6 @@ public function getComplainToday(Request $request){
 
  }
 
-
  public function allfeedbackchart(){
     $result = DB::table('complains')
     ->join('users', 'complains.user_id', '=' ,'users.id')
@@ -219,11 +219,10 @@ public function getComplainToday(Request $request){
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
-        'branch', ))
+        'branch'))
     ->groupby('branch')
     ->get();
         array(
-
          'branch',
          'No',
          'Yes'
@@ -236,4 +235,49 @@ public function getComplainToday(Request $request){
     ],200);
  }
 
+
+
+ public function feedbackChartPeriod(Request $request){
+    $validator = Validator::make($request->all(), [
+        'start_date' => ['required','date'],
+        'end_date' => ['required','date','after_or_equal:start_date'],
+
+    ]);
+
+
+
+    if($validator-> fails()){
+        return $this->sendResponse([
+            'success' => false,
+            'data'=> $validator->errors(),
+            'message' => 'Validation Error'
+        ], 400);
+
+    }
+
+    $startDate =carbon::parse($request->start_date);
+    $endDate = carbon::parse($request->end_date);
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),  [$startDate, $endDate])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        'branch'))
+    ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+     'success' => true,
+      'message' => $result,
+
+    ],200);
+ }
 }

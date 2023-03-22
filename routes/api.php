@@ -29,6 +29,7 @@ Route:: post("cust-allfeed","App\Http\Controllers\AdminController@getAllComplain
 Route:: post("cust-feednow","App\Http\Controllers\AdminController@getComplainToday");
 Route:: post("all-branch","App\Http\Controllers\AdminController@getAllBranch");
 Route:: post("all-feedchart","App\Http\Controllers\AdminController@allfeedbackchart");
+Route:: post("feedchart-periods","App\Http\Controllers\AdminController@feedbackChartPeriod");
 
 });
 
