@@ -136,9 +136,6 @@ public function adminLogin(Request $request){
 }
 
 public function getAllComplains(){
-
-
-
    $result = DB::table('complains')
        ->join('users', 'complains.user_id', '=' ,'users.id')
        ->get(array(
@@ -157,17 +154,41 @@ public function getAllComplains(){
 
 }
 
-public function getComplainToday(){
+public function getComplainToday(Request $request){
+    $validator = Validator::make($request->all(), [
+        'start_date' => ['required','date'],
+        'end_date' => ['required','date'],
 
-    return  DB::table('complains')
+    ]);
+
+
+    if($validator-> fails()){
+        return $this->sendResponse([
+            'success' => false,
+            'data'=> $validator->errors(),
+            'message' => 'Validation Error'
+        ], 400);
+
+    }
+
+    $startDate =carbon::parse($request->start_date);
+    $endDate = carbon::parse($request->end_date);
+
+    $results=  DB::table('complains')
     ->join('users', 'complains.user_id', '=' ,'users.id')
-     -> whereDate('complains.created_at',  Carbon::today())
+     -> whereBetween(DB::raw('DATE(complains.created_at)'),  [$startDate, $endDate])
     ->get(array(
           'users.id',
          'branch',
          'phone_number',
          'comment'
     ));
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $results,
+
+       ],200);
 
 
 
