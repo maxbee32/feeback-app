@@ -212,15 +212,13 @@ public function getComplainToday(Request $request){
 
 
  public function allfeedbackchart(){
-
     $result = DB::table('complains')
     ->join('users', 'complains.user_id', '=' ,'users.id')
     ->select(array(
-
-        DB::raw('SUM(CASE
-        WHEN complains.comment = "No" THEN 1  ELSE 0 END) AS No'),
-        DB::raw('SUM(CASE
-        WHEN  complains.comment = "Yes" THEN 1 ELSE 0 END) AS Yes'),
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch', ))
     ->groupby('branch')
     ->get();
