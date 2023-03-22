@@ -26,11 +26,10 @@ class UserController extends Controller
 
      //branch login
     public function userLogin(Request $request){
-     //   $branch  = auth()->user()->branch;
         $validator = Validator::make($request->all(), [
             'email'=>['required','email:rfc,filter,dns'],
             'password'=> ['required','string'],
-            //'branch'=> ['required']
+
         ]);
 
 

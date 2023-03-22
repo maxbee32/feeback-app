@@ -137,7 +137,7 @@ public function adminLogin(Request $request){
 
 public function getAllComplains(){
 
-    
+
 
    $result = DB::table('complains')
        ->join('users', 'complains.user_id', '=' ,'users.id')
@@ -174,11 +174,17 @@ public function getComplainToday(){
  }
 
  public function getAllBranch(){
-    return DB::table('users')
+    $res= DB::table('users')
     ->get(array(
         'email',
         'branch'
     ));
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $res,
+
+       ],200);
+
 
  }
 
