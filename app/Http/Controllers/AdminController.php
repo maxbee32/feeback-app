@@ -26,7 +26,7 @@ class AdminController extends Controller
 
 
      public function __construct(){
-        $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch']]);
+        $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
@@ -157,9 +157,10 @@ public function getAllComplains(){
 public function getComplainToday(Request $request){
     $validator = Validator::make($request->all(), [
         'start_date' => ['required','date'],
-        'end_date' => ['required','date'],
+        'end_date' => ['required','date','after_or_equal:start_date'],
 
     ]);
+
 
 
     if($validator-> fails()){
@@ -207,6 +208,34 @@ public function getComplainToday(Request $request){
        ],200);
 
 
+ }
+
+
+ public function allfeedbackchart(){
+
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    ->select(array(
+
+        DB::raw('SUM(CASE
+        WHEN complains.comment = "No" THEN 1  ELSE 0 END) AS No'),
+        DB::raw('SUM(CASE
+        WHEN  complains.comment = "Yes" THEN 1 ELSE 0 END) AS Yes'),
+        'branch', ))
+    ->groupby('branch')
+    ->get();
+        array(
+
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+     'success' => true,
+      'message' => $result,
+
+    ],200);
  }
 
 }
