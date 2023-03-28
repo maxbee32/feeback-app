@@ -27,7 +27,7 @@ class AdminController extends Controller
 
      public function __construct(){
         $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart',
-        'feedbackChartPeriod']]);
+        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
@@ -98,7 +98,7 @@ class AdminController extends Controller
                 return response()->json([
                     'access_token' => $token,
                     'token_type' => 'bearer',
-                     'expires_in' => auth()->factory()->getTTL()* 60,
+                     'expires_in' => config('jwt.ttl') * 60,//auth()->factory()->getTTL()* 60,
                      'user'=>auth()->user(),
                     'message' => "branch account created successfully"
                 ],200);
@@ -139,8 +139,9 @@ public function adminLogin(Request $request){
 public function getAllComplains(){
    $result = DB::table('complains')
        ->join('users', 'complains.user_id', '=' ,'users.id')
+       ->orderBy("complains.created_at", 'desc')
        ->get(array(
-            'users.id',
+            'complains.id',
             'branch',
             'phone_number',
             'comment'
@@ -199,6 +200,7 @@ public function getComplainToday(Request $request){
  public function getAllBranch(){
     $res= DB::table('users')
     ->get(array(
+        'id',
         'email',
         'branch'
     ));
@@ -280,4 +282,238 @@ public function getComplainToday(Request $request){
 
     ],200);
  }
+
+ public function cardData(){
+    $date = \Carbon\Carbon::today()->subDays(7);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+       // 'branch'))
+         DB::raw('COUNT(DISTINCT branch) as branch')))
+    //  ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+
+ public function cardData1(){
+    $date = \Carbon\Carbon::today()->subDays(30);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+       // 'branch'))
+         DB::raw('COUNT(DISTINCT branch) as branch')))
+    //  ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+
+ public function cardData2(){
+    $date = \Carbon\Carbon::today()->subDays(90);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+       // 'branch'))
+         DB::raw('COUNT(DISTINCT branch) as branch')))
+    //  ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+ public function cardData3(){
+    $date = \Carbon\Carbon::today()->subDays(365);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+       // 'branch'))
+         DB::raw('COUNT(DISTINCT branch) as branch')))
+    //  ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+
+ public function commentfor7(){
+    $date = \Carbon\Carbon::today()->subDays(7);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        'branch'))
+        // DB::raw('COUNT(DISTINCT branch) as branch')))
+      ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+
+ public function commentfor30(){
+    $date = \Carbon\Carbon::today()->subDays(30);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        'branch'))
+        // DB::raw('COUNT(DISTINCT branch) as branch')))
+      ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+
+ public function commentfor90(){
+    $date = \Carbon\Carbon::today()->subDays(90);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        'branch'))
+        // DB::raw('COUNT(DISTINCT branch) as branch')))
+      ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
+
+
+
+
+ public function commentfor365(){
+    $date = \Carbon\Carbon::today()->subDays(365);
+   $date1 = Carbon::today();
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        'branch'))
+        // DB::raw('COUNT(DISTINCT branch) as branch')))
+      ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => $result,
+
+       ],200);
+ }
 }
+
+

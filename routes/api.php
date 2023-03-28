@@ -30,7 +30,14 @@ Route:: post("cust-feednow","App\Http\Controllers\AdminController@getComplainTod
 Route:: post("all-branch","App\Http\Controllers\AdminController@getAllBranch");
 Route:: post("all-feedchart","App\Http\Controllers\AdminController@allfeedbackchart");
 Route:: post("feedchart-periods","App\Http\Controllers\AdminController@feedbackChartPeriod");
-
+Route:: post("card-data7","App\Http\Controllers\AdminController@cardData");
+Route:: post("card-data30","App\Http\Controllers\AdminController@cardData1");
+Route:: post("card-data90","App\Http\Controllers\AdminController@cardData2");
+Route:: post("card-data365","App\Http\Controllers\AdminController@cardData3");
+Route:: post("cust-feedforsevendays","App\Http\Controllers\AdminController@commentfor7");
+Route:: post("cust-feedforthirtydays","App\Http\Controllers\AdminController@commentfor30");
+Route:: post("cust-feedforninetydays","App\Http\Controllers\AdminController@commentfor90");
+Route:: post("cust-feedforthreesixfivedays","App\Http\Controllers\AdminController@commentfor365");
 });
 
 
