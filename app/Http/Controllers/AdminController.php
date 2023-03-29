@@ -405,14 +405,14 @@ public function getComplainToday(Request $request){
     ->join('users', 'complains.user_id', '=' ,'users.id')
     -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
     ->select(array(
-        'complains.id',
+        'users.id',
         DB::raw("SUM(CASE
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
         // DB::raw('COUNT(DISTINCT branch) as branch')))
-      ->groupby('branch','complains.id')
+      ->groupby('branch','users.id')
     ->get();
         array(
          'branch',
@@ -435,14 +435,14 @@ public function getComplainToday(Request $request){
     ->join('users', 'complains.user_id', '=' ,'users.id')
     -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
     ->select(array(
-        'complains.id',
+        'users.id',
         DB::raw("SUM(CASE
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
         // DB::raw('COUNT(DISTINCT branch) as branch')))
-      ->groupby('branch','complains.id')
+      ->groupby('branch','users.id')
     ->get();
         array(
          'branch',
@@ -465,14 +465,14 @@ public function getComplainToday(Request $request){
     ->join('users', 'complains.user_id', '=' ,'users.id')
     -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
     ->select(array(
-        'complains.id',
+        'users.id',
         DB::raw("SUM(CASE
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
         // DB::raw('COUNT(DISTINCT branch) as branch')))
-      ->groupby('branch','complains.id')
+      ->groupby('branch','users.id')
     ->get();
         array(
          'branch',
@@ -497,14 +497,14 @@ public function getComplainToday(Request $request){
     ->join('users', 'complains.user_id', '=' ,'users.id')
     -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
     ->select(array(
-        'complains.id',
+        'users.id',
         DB::raw("SUM(CASE
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
         // DB::raw('COUNT(DISTINCT branch) as branch')))
-      ->groupby('branch', 'complains.id')
+      ->groupby('branch', 'users.id')
     ->get();
         array(
 
