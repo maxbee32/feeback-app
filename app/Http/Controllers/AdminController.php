@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Admin;
@@ -27,7 +28,7 @@ class AdminController extends Controller
 
      public function __construct(){
         $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart',
-        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365']]);
+        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365','deleteUser']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
@@ -199,6 +200,7 @@ public function getComplainToday(Request $request){
 
  public function getAllBranch(){
     $res= DB::table('users')
+    ->orderBy("users.created_at", 'desc')
     ->get(array(
         'id',
         'email',
@@ -518,6 +520,35 @@ public function getComplainToday(Request $request){
          'message' => $result,
 
        ],200);
+ }
+
+
+ public function deleteUser($id){
+ $user = User::find($id);
+ if (is_null($user)){
+    return $this ->sendResponse([
+        'success' => true,
+         'message' => 'Branch manager not found.'
+
+       ],200);
+   }
+
+   else {
+     DB::beginTransaction();
+     try{
+        $user->delete();
+        DB::commit();
+        return $this ->sendResponse([
+            'success' => true,
+             'message' => 'Account has been permanently removed from the system.'
+
+           ],200);
+     } catch(Exception $err){
+        DB::rollBack();
+     }
+
+
+}
  }
 }
 
