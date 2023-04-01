@@ -45,6 +45,9 @@ class SendEmailBranchCron extends Command
         foreach ($result as $key =>$result){
 
             $email = $result->email;
+            // $No = $result->No;
+            // $Yes = $result->Yes;
+
 
        if($result->No > $result->Yes){
 

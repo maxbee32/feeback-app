@@ -2,12 +2,14 @@
 
 namespace App\Mail;
 
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+
 
 class PromptEmail extends Mailable
 {
@@ -17,11 +19,15 @@ class PromptEmail extends Mailable
      * Create a new message instance.
      */
     public $details;
+    // public  $comment1;
+    // public  $comment2;
 
     public function __construct($details)
     {
         //
         $this->details = $details;
+        // $this->comment1 = $comment1;
+        // $this->comment2 = $comment2;
     }
 
     /**

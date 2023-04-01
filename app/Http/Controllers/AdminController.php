@@ -28,7 +28,7 @@ class AdminController extends Controller
 
      public function __construct(){
         $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart',
-        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365','deleteUser']]);
+        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365','deleteUser','testdata']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
@@ -382,8 +382,9 @@ public function getComplainToday(Request $request){
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
-       // 'branch'))
-         DB::raw('COUNT(DISTINCT branch) as branch')))
+        DB::raw("COUNT(Complains.comment) As comment"),
+         DB::raw('COUNT(DISTINCT branch) as branch')
+         ))
     //  ->groupby('branch')
     ->get();
         array(
@@ -549,6 +550,26 @@ public function getComplainToday(Request $request){
 
 
 }
+ }
+
+ public function testdata(){
+    $result = DB::table('users')
+        ->join('complains','users.id', '=' ,'complains.user_id')
+        ->select(array(
+            DB::raw("SUM(CASE
+            WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+            DB::raw("SUM(CASE
+            WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+            DB::raw("COUNT(Complains.comment) As comment"),
+            'branch','email'))
+        ->groupby('branch','email')
+        ->get();
+
+        return $this ->sendResponse([
+            'success' => true,
+             'message' => $result,
+
+           ],200);
  }
 }
 
