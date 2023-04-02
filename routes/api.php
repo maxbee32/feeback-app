@@ -39,7 +39,6 @@ Route:: post("cust-feedforthirtydays","App\Http\Controllers\AdminController@comm
 Route:: post("cust-feedforninetydays","App\Http\Controllers\AdminController@commentfor90");
 Route:: post("cust-feedforthreesixfivedays","App\Http\Controllers\AdminController@commentfor365");
 Route::delete("delete-user/{id}","App\Http\Controllers\AdminController@deleteUser");
-Route::post("test-data","App\Http\Controllers\AdminController@testdata");
 });
 
 
