@@ -28,7 +28,8 @@ class AdminController extends Controller
 
      public function __construct(){
         $this->middleware('auth:api', ['except'=>['adminSignUp', 'branchSignUp','adminLogin','getAllComplains','getComplainToday','getAllBranch','allfeedbackchart',
-        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365','deleteUser']]);
+        'feedbackChartPeriod','cardData', 'cardData1','cardData2','cardData3','commentfor7','commentfor30','commentfor90', 'commentfor365','deleteUser','singleBranch',
+        'singleBranchWithDate']]);
     }
     //admin account created
     public function adminSignUp(Request $request){
@@ -545,6 +546,96 @@ public function getComplainToday(Request $request){
 
 
 }
+ }
+
+
+ public function singleBranch(Request $request){
+    $validator = Validator::make($request->all(), [
+        'branch' => ['required','string'],
+
+    ]);
+
+    if($validator-> fails()){
+        return $this->sendResponse([
+            'success' => false,
+            'data'=> $validator->errors(),
+            'message' => 'Validation Error'
+        ], 400);
+
+    }
+
+    $branch =$request->branch;
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> where(DB::raw('branch'),  [$branch])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        DB::raw("COUNT(Complains.comment) As comment"),
+        'branch'))
+    ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+     'success' => true,
+      'message' => $result,
+
+    ],200);
+ }
+
+
+
+ public function singleBranchWithDate(Request $request){
+    $validator = Validator::make($request->all(), [
+        'branch' => ['required','string'],
+        'start_date' => ['required','date'],
+        'end_date' => ['required','date','after_or_equal:start_date']
+
+    ]);
+
+    if($validator-> fails()){
+        return $this->sendResponse([
+            'success' => false,
+            'data'=> $validator->errors(),
+            'message' => 'Validation Error'
+        ], 400);
+
+    }
+
+    $startDate =carbon::parse($request->start_date);
+    $endDate = carbon::parse($request->end_date);
+    $branch =$request->branch;
+    $result = DB::table('complains')
+    ->join('users', 'complains.user_id', '=' ,'users.id')
+    -> where(DB::raw('branch'),  [$branch])
+    -> whereBetween(DB::raw('DATE(complains.created_at)'),  [$startDate, $endDate])
+    ->select(array(
+        DB::raw("SUM(CASE
+        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+        DB::raw("SUM(CASE
+        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+        DB::raw("COUNT(Complains.comment) As comment"),
+        'branch'))
+    ->groupby('branch')
+    ->get();
+        array(
+         'branch',
+         'No',
+         'Yes'
+    );
+
+    return $this ->sendResponse([
+     'success' => true,
+      'message' => $result,
+
+    ],200);
  }
 
 }
