@@ -325,7 +325,6 @@ public function getComplainToday(Request $request){
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
-       // 'branch'))
          DB::raw('COUNT(DISTINCT branch) as branch')))
     //  ->groupby('branch')
     ->get();
@@ -372,11 +371,11 @@ public function getComplainToday(Request $request){
  }
 
  public function cardData3(){
-    $date = \Carbon\Carbon::today()->subDays(365);
-   $date1 = Carbon::today();
+//     $date = \Carbon\Carbon::today()->subDays(365);
+//    $date1 = Carbon::today();
     $result = DB::table('complains')
     ->join('users', 'complains.user_id', '=' ,'users.id')
-    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    // -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
     ->select(array(
         DB::raw("SUM(CASE
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
@@ -414,7 +413,6 @@ public function getComplainToday(Request $request){
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
-        // DB::raw('COUNT(DISTINCT branch) as branch')))
       ->groupby('branch','users.id')
     ->get();
         array(
@@ -444,7 +442,6 @@ public function getComplainToday(Request $request){
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
-        // DB::raw('COUNT(DISTINCT branch) as branch')))
       ->groupby('branch','users.id')
     ->get();
         array(
@@ -474,7 +471,6 @@ public function getComplainToday(Request $request){
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
-        // DB::raw('COUNT(DISTINCT branch) as branch')))
       ->groupby('branch','users.id')
     ->get();
         array(
@@ -506,7 +502,6 @@ public function getComplainToday(Request $request){
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
         'branch'))
-        // DB::raw('COUNT(DISTINCT branch) as branch')))
       ->groupby('branch', 'users.id')
     ->get();
         array(

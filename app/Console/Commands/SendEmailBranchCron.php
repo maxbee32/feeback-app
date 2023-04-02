@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
+use App\Models\Complain;
 use App\Mail\PromptEmail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -29,8 +31,10 @@ class SendEmailBranchCron extends Command
     public function handle()
     {
         //
+        $date1 = Carbon::today();
         $result = DB::table('users')
         ->join('complains','users.id', '=' ,'complains.user_id')
+        ->where(DB::raw('DATE(complains.created_at)',''),[$date1])
         ->select(array(
             DB::raw("SUM(CASE
             WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
@@ -38,8 +42,10 @@ class SendEmailBranchCron extends Command
             WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
             DB::raw("COUNT(Complains.comment) As comment"),
             'email'))
+
         ->groupby('branch','email')
         ->get();
+
 
 
         foreach ($result as $key =>$result){
