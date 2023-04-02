@@ -36,24 +36,24 @@ class SendEmailBranchCron extends Command
             WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
             DB::raw("SUM(CASE
             WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
-            'branch','email'))
+            DB::raw("COUNT(Complains.comment) As comment"),
+            'email'))
         ->groupby('branch','email')
         ->get();
-
 
 
         foreach ($result as $key =>$result){
 
             $email = $result->email;
-            // $No = $result->No;
-            // $Yes = $result->Yes;
 
 
-       if($result->No > $result->Yes){
+        if($result->No > $result->Yes){
+
+
 
         Mail::to($email)->send(new PromptEmail($result));
      }
-}
+ }
 
 }
 

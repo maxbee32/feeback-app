@@ -19,8 +19,7 @@ class PromptEmail extends Mailable
      * Create a new message instance.
      */
     public $details;
-    // public  $comment1;
-    // public  $comment2;
+   
 
     public function __construct($details)
     {
