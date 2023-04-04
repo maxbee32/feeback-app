@@ -1,9 +1,21 @@
+
 @component('mail::message')
-# Customer's Feedback for the day
+# Customer's Feedback
 
 Hello branch manager {{$details->email}}.
-We received a total of {{$details->comment}} feedback from clients at your branch today.
-From the feedback, {{$details->No}} were negative feedback and  {{$details->Yes}} were positive feedback.
+We received these feedback today on {{$details->date}} from your {{$details->branch}} branch.
+
+
+
+| Customer's feedback for the day       |
+| ------------------------------------  |
+| Negative feedback {{$details->No}}.   |
+| Positive feedback {{$details->Yes}}.  |
+| Total feedback {{$details->comment}}. |
+
+
+
+
 Lets work harder for clients to appreciate our hardwork.
 
 Thanks,<br>

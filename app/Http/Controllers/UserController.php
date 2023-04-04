@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ComplainEvent;
 use App\Models\User;
 use App\Models\Complain;
 use Illuminate\Http\Request;
@@ -91,6 +92,9 @@ class UserController extends Controller
         ['user_id' => optional(Auth()->user())->id],
             $validator-> validated()
     ));
+
+
+    event(new ComplainEvent($request->comment));
 
     return $this->sendResponse([
         'success' => true,

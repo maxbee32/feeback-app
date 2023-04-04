@@ -41,12 +41,12 @@ class SendEmailBranchCron extends Command
             DB::raw("SUM(CASE
             WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
             DB::raw("COUNT(Complains.comment) As comment"),
-            'email'))
-
-        ->groupby('branch','email')
+            DB::raw("DATE(complains.created_at) As date"),
+            'email', 'branch'))
+        ->groupby('branch','email', 'complains.created_at')
         ->get();
 
-
+        // customerfeedbackapp@izweghana.com
 
         foreach ($result as $key =>$result){
 
@@ -57,7 +57,7 @@ class SendEmailBranchCron extends Command
 
 
 
-        Mail::to($email)->send(new PromptEmail($result));
+        Mail::to($email)->cc("customerfeedbackapp@izweghana.com")->send(new PromptEmail($result));
      }
  }
 
