@@ -94,7 +94,7 @@ class UserController extends Controller
     ));
 
 
-    event(new ComplainEvent($request->comment));
+    // event(new ComplainEvent($request->comment));
 
     return $this->sendResponse([
         'success' => true,
