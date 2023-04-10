@@ -146,7 +146,9 @@ public function getAllComplains(){
             'complains.id',
             'branch',
             'phone_number',
-            'comment'
+            'comment',
+            DB::raw("DATE(complains.created_at) AS Date" ),
+
        ));
 
        return $this ->sendResponse([
