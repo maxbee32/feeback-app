@@ -100,7 +100,7 @@ class AdminController extends Controller
                 return response()->json([
                     'access_token' => $token,
                     'token_type' => 'bearer',
-                     'expires_in' => config('jwt.ttl') * 60,//auth()->factory()->getTTL()* 60,
+                    //  'expires_in' => config('jwt.ttl') * 60,//auth()->factory()->getTTL()* 60,
                      'user'=>auth()->user(),
                     'message' => "branch account created successfully"
                 ],200);
