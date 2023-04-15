@@ -47,9 +47,11 @@ class SendEmailBranchCron extends Command
         ->get();
 
         // customerfeedbackapp@izweghana.com
+        $No =$result->pluck('No');
+        $Yes =$result->pluck('Yes');
 
          foreach ($result as $result){
-            if($result->No > $result->Yes){
+            if($No > $Yes){
 
             $email = $result->email;
 
@@ -61,6 +63,7 @@ class SendEmailBranchCron extends Command
        Mail::to($email)->cc("customerfeedbackapp@izweghana.com")->send(new PromptEmail($result));
       }
  }
+  return;
 
 }
 

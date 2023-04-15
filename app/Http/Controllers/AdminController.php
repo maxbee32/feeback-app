@@ -404,25 +404,22 @@ public function getComplainToday(Request $request){
 
 
  public function commentfor7(){
-    $date = \Carbon\Carbon::today()->subDays(7);
-   $date1 = Carbon::today();
-    $result = DB::table('complains')
-    ->join('users', 'complains.user_id', '=' ,'users.id')
-    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
+    $date1 = Carbon::today();
+    $result = DB::table('users')
+    ->join('complains','users.id', '=' ,'complains.user_id')
+    ->where(DB::raw('DATE(complains.created_at)',''),[$date1])
     ->select(array(
-        'users.id',
         DB::raw("SUM(CASE
         WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
         DB::raw("SUM(CASE
         WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
-        'branch'))
-      ->groupby('branch','users.id')
+        DB::raw("COUNT(Complains.comment) As comment"),
+        DB::raw("DATE(complains.created_at) As date"),
+        'email', 'branch'))
+    ->groupby('branch','email', 'date')
     ->get();
-        array(
-         'branch',
-         'No',
-         'Yes'
-    );
+
+//   echo($result->pluck('No'));
 
     return $this ->sendResponse([
         'success' => true,
