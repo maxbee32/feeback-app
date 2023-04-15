@@ -61,10 +61,10 @@ class SendEmailBranchCron extends Command
         // if($result->pluck('No') > $result->pluck('Yes')){
 
 
-       Mail::to($email)->cc("customerfeedbackapp@izweghana.com")->send(new PromptEmail($result));
+       Mail::to($email)->cc('customerfeedbackapp@izweghana.com')->send(new PromptEmail($result));
       }
  }
-  return;
+  return 0;
 
 }
 
