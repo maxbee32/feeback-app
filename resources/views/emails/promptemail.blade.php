@@ -7,11 +7,11 @@ We received these feedback today on {{$details->date}} from your {{$details->bra
 
 
 
-| Customer's feedback for the day       |
-| ------------------------------------  |
-| Negative feedback {{$details->No}}.   |
-| Positive feedback {{$details->Yes}}.  |
-| Total feedback {{$details->comment}}. |
+| Customer's feedback for the day        |
+| -------------------------------------- |
+| Negative feedbacks {{$details->No}}.   |
+| Positive feedbacks {{$details->Yes}}.  |
+| Total feedbacks {{$details->comment}}. |
 
 
 
