@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// Artisan::command('inspire', function () {
+//     $this->comment(Inspiring::quote());
+// })->purpose('Display an inspiring quote');
+
+
+Artisan::command('sendemail:cron', function () {
+//$this->comment(Inspiring::quote());
+})->purpose('Send email to branches');
+
