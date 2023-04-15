@@ -49,11 +49,12 @@ class SendEmailBranchCron extends Command
         // customerfeedbackapp@izweghana.com
         $No =$result->pluck('No');
         $Yes =$result->pluck('Yes');
+        $email = $result->pluck('email');
 
          foreach ($result as $result){
             if($No > $Yes){
 
-            $email = $result->email;
+            $email = $email;
 
 
 
