@@ -11,14 +11,14 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      */
     protected $commands = [
-        Commands\SendEmailBranchCron::class
+        Commands\SendEmails::class
     ];
 
 
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('sendemailbranch:cron')->everyMinute();
+        $schedule->command('sendemail:cron')->everyMinute();
        # dailyAt('16:00');
     }
 

@@ -3,27 +3,26 @@
 namespace App\Console\Commands;
 
 use Carbon\Carbon;
-use App\Models\Complain;
 use App\Mail\PromptEmail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailBranchCron extends Command
+class SendEmails extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'sendemailbranch:cron';
+    protected $signature = 'sendemail:cron';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send email to branches';
 
     /**
      * Execute the console command.
@@ -61,12 +60,10 @@ class SendEmailBranchCron extends Command
         // if($result->pluck('No') > $result->pluck('Yes')){
 
 
-       Mail::to('mboakye9438@gmail.com')->send(new PromptEmail($result));
+    //    Mail::to($email)->cc('customerfeedbackapp@izweghana.com')->send(new PromptEmail($result));
+          Mail::to($email)->send(new PromptEmail($result));
       }
  }
   return 0;
-
-}
-
-
+    }
 }
