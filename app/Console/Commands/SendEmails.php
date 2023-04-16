@@ -28,6 +28,10 @@ class SendEmails extends Command
      * Execute the console command.
      */
 
+     public function __construct()
+     {
+         parent::__construct();
+     }
 
     public function handle()
     {
