@@ -38,7 +38,7 @@ Route:: post("card-data365","App\Http\Controllers\AdminController@cardData3");
 Route:: post("cust-feedforsevendays","App\Http\Controllers\AdminController@commentfor7");
 Route:: post("cust-feedforthirtydays","App\Http\Controllers\AdminController@commentfor30");
 Route:: post("cust-feedforninetydays","App\Http\Controllers\AdminController@commentfor90");
-Route:: post("cust-feedforthreesixfivedays","App\Http\Controllers\AdminController@commentfor365");
+Route:: get("cust-feedforthreesixfivedays","App\Http\Controllers\AdminController@commentfor365");
 Route::delete("delete-user/{id}","App\Http\Controllers\AdminController@deleteUser");
 Route::post("single-data","App\Http\Controllers\AdminController@singleBranch");
 Route::post("single-branch-date","App\Http\Controllers\AdminController@singleBranchWithDate");

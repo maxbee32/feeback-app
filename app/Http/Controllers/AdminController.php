@@ -7,8 +7,10 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Complain;
+use App\Mail\PromptEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -493,33 +495,43 @@ public function getComplainToday(Request $request){
 
 
  public function commentfor365(){
-    $date = \Carbon\Carbon::today()->subDays(365);
-   $date1 = Carbon::today();
-    $result = DB::table('complains')
-    ->join('users', 'complains.user_id', '=' ,'users.id')
-    -> whereBetween(DB::raw('DATE(complains.created_at)'),[$date, $date1 ])
-    ->select(array(
-        'users.id',
-        DB::raw("SUM(CASE
-        WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
-        DB::raw("SUM(CASE
-        WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
-        'branch'))
-      ->groupby('branch', 'users.id')
-    ->get();
-        array(
+    $date1 = Carbon::today();
+        $result = DB::table('users')
+        ->join('complains','users.id', '=' ,'complains.user_id')
+        ->where(DB::raw('DATE(complains.created_at)',''),[$date1])
+        ->select(array(
+            DB::raw("SUM(CASE
+            WHEN complains.comment = 'No' THEN 1  ELSE 0 END) AS No"),
+            DB::raw("SUM(CASE
+            WHEN  complains.comment = 'Yes' THEN 1 ELSE 0 END) AS Yes"),
+            DB::raw("COUNT(Complains.comment) As comment"),
+            DB::raw("DATE(complains.created_at) As date"),
+            'email', 'branch'))
+        ->groupby('branch','email', 'date')
+        ->get();
 
-         'branch',
-         'No',
-         'Yes'
-    );
+        // customerfeedbackapp@izweghana.com
+        $No =$result->pluck('No');
+        $Yes =$result->pluck('Yes');
+        $email = $result->pluck('email');
 
-    return $this ->sendResponse([
-        'success' => true,
-         'message' => $result,
+         foreach ($result as $result){
+            if($No > $Yes){
 
-       ],200);
+            $email = $email;
+
+
+
+        // if($result->pluck('No') > $result->pluck('Yes')){
+
+
+    //    Mail::to($email)->cc('customerfeedbackapp@izweghana.com')->send(new PromptEmail($result));
+          Mail::to($email)->send(new PromptEmail($result));
+      }
  }
+//   return 0;
+    }
+
 
 
  public function deleteUser($id){
