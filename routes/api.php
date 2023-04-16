@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,4 +52,8 @@ Route::group(['middleware'=>'api',
 Route:: post("branch-login","App\Http\Controllers\UserController@userLogin");
 Route:: post("cust-feedback","App\Http\Controllers\UserController@custFeedback");
 
+});
+
+Route::get('send',function(){
+    return Artisan::call('sendemail:cron');
 });

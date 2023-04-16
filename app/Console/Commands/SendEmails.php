@@ -27,6 +27,8 @@ class SendEmails extends Command
     /**
      * Execute the console command.
      */
+
+
     public function handle()
     {
         //
